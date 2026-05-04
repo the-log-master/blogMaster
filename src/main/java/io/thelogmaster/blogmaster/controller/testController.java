@@ -101,4 +101,12 @@ public class testController {
     void print(PrintWriter writer, String string) {
         writer.println(string + "<br>");
     }
+
+    //index 확인용
+    @GetMapping("/index")
+    public String showIndexPage(){
+        System.out.println("!!");
+        return "index";
+    }
+
 }

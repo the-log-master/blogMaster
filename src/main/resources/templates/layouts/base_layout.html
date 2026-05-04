@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Document</title>
+    <th:block th:insert="~{fragments/common_headers::commonHeader}"></th:block>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<div class="drawer lg:drawer-open flex-grow">
+    <!-- 이 ID("my-drawer")가 topbar의 버튼(for="my-drawer")과 연결됩니다 -->
+    <input class="drawer-toggle" id="my-drawer" type="checkbox"/>
+
+    <div class="drawer-content flex flex-col">
+        <!-- 1. 상단 바 (여기에 삼지창 버튼이 들어있음) -->
+        <div th:replace="~{fragments/common_topbar::common_topbar}"></div>
+
+        <!-- 2. 본문 내용 -->
+        <div class="container mx-auto p-6" layout:fragment="contents">
+            <!-- index.html 내용 -->
+        </div>
+    </div>
+
+    <!-- 3. 사이드바 영역 -->
+    <div class="drawer-side">
+        <!-- 모바일에서 바깥 클릭 시 닫히게 하는 오버레이 -->
+        <label aria-label="close sidebar" class="drawer-overlay" for="my-drawer"></label>
+        <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+            <li><a href="/index">게시판 목록</a></li>
+            <li><a>메뉴 2</a></li>
+        </ul>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/common_footer::common_footer}"></footer>
+</body>
+</html>
