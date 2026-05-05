@@ -28,12 +28,67 @@
         <!-- 모바일에서 바깥 클릭 시 닫히게 하는 오버레이 -->
         <label aria-label="close sidebar" class="drawer-overlay" for="my-drawer"></label>
         <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-            <li><a href="/index">게시판 목록</a></li>
-            <li><a>메뉴 2</a></li>
+
+            <li class="menu-title"><span>Main</span></li>
+            <li><a href="/index">전체 게시판</a></li>
+
+            <!-- 동적 메뉴 -->
+            <li class="menu-title mt-4"><span>Categories</span></li>
+
+            <div id="dynamic-category-list">
+
+            </div>
+
+            <!-- 관리-->
+            <li class="menu-title mt-4"><span>Admin</span></li>
+            <li>
+                <button class="btn btn-outline btn-primary btn-sm mt-2" onclick="openCategoryModal()">
+                    카테고리 관리
+                </button>
+            </li>
         </ul>
     </div>
 </div>
 
+<!-- 모든 페이지 공통 모달 추가 -->
+<div th:replace="~{fragments/modals :: categoryModal}"></div>
+
 <footer th:replace="~{fragments/common_footer::common_footer}"></footer>
+
+<!-- 사이드바 동적 메뉴 생성 -->
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        // 사이드바 카테고리 로드 함수 실행
+        loadSidebarCategories();
+    });
+
+    async function loadSidebarCategories() {
+        const container = document.getElementById('dynamic-category-list');
+        if(!container) return;
+
+        try {
+            const response = await fetch('/api/categories');
+            const categories = await response.json();
+
+            container.innerHTML = '';
+            categories.forEach(cat => {
+                if (cat.categoryName) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                            <a href="/index?categoryId=${cat.id}" class="flex justify-between">
+                                <span>${cat.id === 0 ? '📁' : '📂'} ${cat.categoryName}</span>
+                                <span class="badge badge-sm">${Object.keys(cat.postMap || {}).length}</span>
+                            </a>
+                        `;
+                    container.appendChild(li);
+                }
+            });
+        } catch (error) {
+            console.error("사이드바 로드 실패:", error);
+        }
+    }
+</script>
+
+
 </body>
 </html>
