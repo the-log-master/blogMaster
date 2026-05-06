@@ -35,4 +35,6 @@ public class Post {
 
     public Map<Integer, Comment> commentMap;
     public Map<Integer, Category> categoryMap;
+
+
 }

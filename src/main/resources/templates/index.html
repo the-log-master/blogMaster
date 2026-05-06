@@ -32,26 +32,17 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="hover">
-                <th>3</th>
-                <td><a href="#" class="link link-hover font-semibold">DaisyUI로 게시판을 만들어 보았습니다.</a></td>
-                <td>홍길동</td>
-                <td>2026-05-04</td>
-                <td>42</td>
-            </tr>
-            <tr class="hover">
-                <th>2</th>
-                <td><a href="#" class="link link-hover font-semibold">Tailwind CSS와 DaisyUI의 조합</a></td>
-                <td>김철수</td>
-                <td>2026-05-03</td>
-                <td>128</td>
-            </tr>
-            <tr class="hover">
-                <th>1</th>
-                <td><a href="#" class="link link-hover font-semibold">게시판 첫 번째 글입니다.</a></td>
-                <td>이영희</td>
-                <td>2026-05-01</td>
-                <td>256</td>
+            <tr th:each="post : ${postList}" class="hover">
+                <td th:text="${post.id}">id</td>
+                <td>
+                    <a th:href="@{/post(id=${post.id})}"
+                       th:text="${post.postName}">
+                        postName
+                    </a>
+                </td>
+                <td th:text="${post.userName}">userName</td>
+                <td th:text="${post.createdAt}">createdAt</td>
+                <td th:text="${post.viewCount}">viewCount</td>
             </tr>
             </tbody>
         </table>

@@ -21,6 +21,7 @@ repositories {
 dependencies {
 // Source: https://mvnrepository.com/artifact/com.thedeanda/lorem
     implementation 'com.thedeanda:lorem:2.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     compileOnly 'org.projectlombok:lombok'
