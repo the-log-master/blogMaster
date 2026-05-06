@@ -14,6 +14,8 @@ import java.util.*;
 @Repository
 public class MemoryRepository {
     public static Map<Integer, Category> categoryMap = new HashMap<>();
+    // Comment 객체 저장소 생성
+    public static final List<Comment> comments = new LinkedList<>();
 
     // 개발용 샘플 데이터 생성 로직, 서비스 완성시 제거할 것
     static Random random = new Random(
@@ -34,7 +36,25 @@ public class MemoryRepository {
                 LocalDateTime.now(),
                 new HashMap<>());
     }
-    
+
+    /**
+     * 댓글 ID 생성
+     */
+    public int nextCommentId() {
+        return commentCount++;
+    }
+
+    /**
+     * postId로 Post 찾기
+     */
+    public Optional<Post> findPostById(int postId) {
+        return categoryMap.values().stream()
+                .flatMap(category -> category.getPostMap().values().stream())
+                .filter(post -> post.getId() == postId)
+                .findFirst();
+    }
+
+
     private static Post genPost() {
         Map<Integer, Comment> commentMap = new HashMap<>();
 

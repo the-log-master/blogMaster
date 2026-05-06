@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,8 +39,13 @@ public class testController {
         writer.flush();
     }
 
-    @GetMapping(path = "/post")
-    public void testPage2 (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    @GetMapping(path = "/posts")
+    public void testPage2(
+            @RequestParam(defaultValue = "0") int id,
+            HttpServletRequest req,
+            HttpServletResponse resp
+    ) throws IOException {
+
         resp.setHeader("Content-Type", "text/html;charset=UTF-8");
 
         PrintWriter writer = resp.getWriter();
@@ -72,7 +78,12 @@ public class testController {
     }
 
     @GetMapping(path = "/comment")
-    public void testPage3 (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void testPage3(
+            @RequestParam(defaultValue = "0") int id_cat,
+            @RequestParam(defaultValue = "0") int id_post,
+            HttpServletRequest req,
+            HttpServletResponse resp
+    ) throws IOException {
         resp.setHeader("Content-Type", "text/html;charset=UTF-8");
 
         PrintWriter writer = resp.getWriter();
@@ -108,5 +119,4 @@ public class testController {
         System.out.println("!!");
         return "index";
     }
-
 }
