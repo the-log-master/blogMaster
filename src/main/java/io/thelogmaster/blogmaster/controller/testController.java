@@ -42,6 +42,8 @@ public class testController {
         writer.flush();
     }
 
+
+
     @GetMapping(path = "/testPosts")
     public void testPage2(
             @RequestParam(defaultValue = "0") int id,
@@ -84,6 +86,7 @@ public class testController {
                 });
         writer.flush();
     }
+
 
 
     @GetMapping(path = "/comment")

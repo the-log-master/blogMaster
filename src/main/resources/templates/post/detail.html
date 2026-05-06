@@ -70,6 +70,30 @@
 <a href="/posts">목록으로 이동</a>
 <!--<a href="javascript:history.back();">목록으로 이동</a>-->
 
+
+    <script>
+        function openEdit(id) {
+            document.getElementById("comment-content-" + id).style.display = "none";
+            document.getElementById("comment-buttons-" + id).style.display = "none";
+            document.getElementById("edit-area-" + id).style.display = "block";
+        }
+
+        function closeEdit(id) {
+            document.getElementById("comment-content-" + id).style.display = "block";
+            document.getElementById("comment-buttons-" + id).style.display = "flex";
+            document.getElementById("edit-area-" + id).style.display = "none";
+        }
+
+        function openReply(id) {
+            document.getElementById("reply-area-" + id).style.display = "block";
+        }
+
+        function closeReply(id) {
+            document.getElementById("reply-area-" + id).style.display = "none";
+        }
+    </script>
+
+
 <hr>
 
 <h2>댓글 영역</h2>
@@ -82,6 +106,7 @@
             <span th:text="${comment.content}">댓글 내용</span>
         </li>
     </ul>
+
 </div>
 
 </body>
