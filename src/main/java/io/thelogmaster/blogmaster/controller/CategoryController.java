@@ -4,8 +4,10 @@ import io.thelogmaster.blogmaster.model.Category;
 import io.thelogmaster.blogmaster.service.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +31,11 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    //메뉴 - 카테고리
     @GetMapping("/api/categories")
     @ResponseBody //JSON데이터 응답
-    public List<Category> getCategoriesApi() {
+    public List<Category> getCategoriesApi(Model model) {
+
         return categoryService.getCategoryList();
     }
 
@@ -42,18 +46,23 @@ public class CategoryController {
             @RequestParam(value = "ids", required = false) List<Integer> ids,
             @RequestParam(value = "categoryNames", required = false) List<String> names) {
 
+        System.out.println("ids:"+ids);
+        System.out.println("names:"+names);
+
         // 데이터가 넘어왔을 경우에만 서비스 로직 실행
-        if (ids != null && names != null) {
+       /* if (ids != null && names != null) {
             categoryService.syncCategories(ids, names);
             return ResponseEntity.ok("success"); // 자바스크립트가 이걸 받고 새로고침(location.reload()) 하게 함
-        }
+        }*/
 
         //전부 삭제될 수도있어서 바꿈
-        //List<Integer> safeIds = (ids == null) ? new ArrayList<>() : ids;
-       // List<String> safeNames = (names == null) ? new ArrayList<>() : names;
-        //categoryService.syncCategories(safeIds, safeNames);
+        List<Integer> safeIds = (ids == null) ? new ArrayList<>() : ids;
+        List<String> safeNames = (names == null) ? new ArrayList<>() : names;
+        categoryService.syncCategories(safeIds, safeNames);
 
-        return ResponseEntity.badRequest().body("fail");
+        return ResponseEntity.ok("success");
+
+        //return ResponseEntity.badRequest().body("fail");
     }
 
 }

@@ -1,6 +1,7 @@
 package io.thelogmaster.blogmaster.service;
 
 import io.thelogmaster.blogmaster.model.Category;
+import io.thelogmaster.blogmaster.model.Comment;
 import io.thelogmaster.blogmaster.model.Post;
 import io.thelogmaster.blogmaster.repository.MemoryRepository;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,29 @@ import java.util.Map;
 
 @Service
 public class CategoryService {
+    private final MemoryRepository memoryRepository;
+
+
+    //생성자
+    public CategoryService(MemoryRepository memoryRepository){
+        this.memoryRepository = memoryRepository;
+    }
+
+
     /**
      * 전체 카테고리 리스트 반환
      */
     public List<Category> getCategoryList() {
-        // Map의 가변적인 값들을 ArrayList로 변환하여 반환
+        List<Category> categories = new ArrayList<>(MemoryRepository.categoryMap.values());
+
+        for(Category category : categories){
+            //카테고리에 속한 post의 수
+            int postCount = category.getPostMap().size();
+            System.out.println("postCount:"+postCount);
+        }
+
         return new ArrayList<>(MemoryRepository.categoryMap.values());
+
     }
 
 

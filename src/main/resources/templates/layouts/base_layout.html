@@ -70,18 +70,26 @@
             const response = await fetch('/api/categories');
             const categories = await response.json();
 
+            console.log(categories);
+
             container.innerHTML = '';
+
             categories.forEach(cat => {
-                if (cat.categoryName) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
+                const li = document.createElement('li');
+
+                console.log(cat);
+
+
+                //th:text="${cat.id == 0} ? |📁 ${cat.categoryName ?: '미분류'}| : |📂 ${cat.categoryName}|
+                li.innerHTML = `
                             <a href="/index?categoryId=${cat.id}" class="flex justify-between">
-                                <span>${cat.id === 0 ? '📁' : '📂'} ${cat.categoryName}</span>
-                                <span class="badge badge-sm">${Object.keys(cat.postMap || {}).length}</span>
+                                <span>${cat.id === 0 ? '📁 미분류' : '📂 '+cat.categoryName}</span>
+                                <span class="badge badge-sm">${cat.postCount}</span>
                             </a>
                         `;
-                    container.appendChild(li);
-                }
+                container.appendChild(li);
+               /* if (cat.categoryName) {
+                }*/
             });
         } catch (error) {
             console.error("사이드바 로드 실패:", error);

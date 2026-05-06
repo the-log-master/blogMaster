@@ -25,34 +25,41 @@
     <script>
         // 모달을 열 때 이 함수를 호출해야 합니다!
         async function openCategoryModal() {
-            const container = document.getElementById('category-container');
-            container.innerHTML = '<p class="text-center p-4">로딩 중...</p>';
+            //모달 열때 alert 띄우기
+            var result = confirm("카테고리 관리를 저장하면 현재 페이지 정보가 날라갈 수 있습니다.\n" +
+                "그래도 하시겠습니까?");
 
-            // 모달띄우기
-            document.getElementById('category_modal').showModal();
+            if(result){
+                const container = document.getElementById('category-container');
+                container.innerHTML = '<p class="text-center p-4">로딩 중...</p>';
 
-            try {
-                // 2. 서버 API 호출 (주소가 /api/categories 인지 확인!)
-                const response = await fetch('/api/categories');
-                if (!response.ok) throw new Error('데이터 응답 에러');
+                // 모달띄우기
+                document.getElementById('category_modal').showModal();
 
-                const categories = await response.json();
+                try {
+                    // 2. 서버 API 호출 (주소가 /api/categories 인지 확인!)
+                    const response = await fetch('/api/categories');
+                    if (!response.ok) throw new Error('데이터 응답 에러');
 
-                console.log("categories:"+categories);
+                    const categories = await response.json();
 
-                container.innerHTML = ''; // 로딩 문구 제거
+                    console.log("categories:"+categories);
 
-                // 3. 받아온 데이터 뿌리기
-                categories.forEach(cat => {
-                    // 이름이 null이 아닌 것만 (id 0번 등 필터링)
-                    if (cat.categoryName !== null) {
-                        renderRow(cat.id, cat.categoryName);
-                    }
-                });
-            } catch (e) {
-                console.error(e);
-                container.innerHTML = '<p class="text-error text-center p-4">데이터를 불러오지 못했습니다.</p>';
+                    container.innerHTML = ''; // 로딩 문구 제거
+
+                    // 3. 받아온 데이터 뿌리기
+                    categories.forEach(cat => {
+                        // 이름이 null이 아닌 것만 (id 0번 등 필터링)
+                        if (cat.categoryName !== null) {
+                            renderRow(cat.id, cat.categoryName);
+                        }
+                    });
+                } catch (e) {
+                    console.error(e);
+                    container.innerHTML = '<p class="text-error text-center p-4">데이터를 불러오지 못했습니다.</p>';
+                }
             }
+
         }
 
         // 공통 행 생성 함수
@@ -80,28 +87,34 @@
 
         //삭제시 넘기기
         document.querySelector('#category_modal form').addEventListener('submit', async (e) => {
-            e.preventDefault(); // 폼의 기본 제출(페이지 이동)을 막습니다.
+            e.preventDefault(); // 폼의 기본 제출
 
-            const formData = new FormData(e.target);
+            // 알림창 (진짜로 저장할건지 물어보기)
+            var result2 = confirm("카테고리를 현재 내용으로 저장하시겠습니까?");
 
-            try {
-                const response = await fetch(e.target.action, {
-                    method: 'POST',
-                    body: formData
-                });
+            if(result2){
+                const formData = new FormData(e.target);
 
-                if (response.ok) {
-                    // 성공 시 모달 닫고 페이지 새로고침!
-                    const modal = document.getElementById('category_modal');
-                    modal.close();
-                    location.reload(); // ㅇㅊㅇ! 여기서 새로고침이 일어납니다.
-                } else {
-                    alert('저장에 실패했습니다.');
+                try {
+                    const response = await fetch(e.target.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // 성공 시 모달 닫고 페이지 새로고침!
+                        const modal = document.getElementById('category_modal');
+                        modal.close();
+                        location.reload(); // ㅇㅊㅇ! 여기서 새로고침이 일어납니다.
+                    } else {
+                        alert('저장에 실패했습니다.');
+                    }
+                } catch (error) {
+                    console.error('에러 발생:', error);
+                    alert('서버와 통신 중 오류가 발생했습니다.');
                 }
-            } catch (error) {
-                console.error('에러 발생:', error);
-                alert('서버와 통신 중 오류가 발생했습니다.');
             }
+
         });
     </script>
 </div>
