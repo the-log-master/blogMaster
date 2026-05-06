@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layouts/base_layout}">
+
+<div layout:fragment="contents">
+
+    <article class="bg-base-100 p-6 rounded-lg shadow-md mb-8">
+
+        <h1 class="text-3xl font-bold mb-4"
+            th:text="${post.postName}">
+            게시글 제목
+        </h1>
+
+        <div class="text-sm text-gray-500 mb-4">
+            작성자:
+            <span th:text="${post.userName}">작성자</span>
+            |
+            조회수:
+            <span th:text="${post.viewCount}">0</span>
+            |
+            공개 여부:
+            <span th:text="${post.isOpen}">true</span>
+        </div>
+
+        <div class="text-xs text-gray-400 mb-4">
+            작성일:
+            <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">
+                2026-05-05 12:00
+            </span>
+            |
+            수정일:
+            <span th:text="${#temporals.format(post.updateAt, 'yyyy-MM-dd HH:mm')}">
+                2026-05-05 12:00
+            </span>
+        </div>
+
+        <div class="border rounded-lg p-4 bg-base-200">
+            <p th:utext="${post.content}">
+                게시글 본문
+            </p>
+        </div>
+
+    </article>
+
+    <div th:replace="~{fragments/comment_section :: commentArea}"></div>
+
+</div>
+</html>
