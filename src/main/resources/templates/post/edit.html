@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 수정</title>
+</head>
+<body>
+
+<h1>게시글 수정</h1>
+
+<form th:action="@{/posts/{postId}/edit(postId=${post.id})}" method="post">
+
+    <div>
+        <label for="postName">제목</label>
+        <input type="text"
+               id="postName"
+               name="postName"
+               th:value="${post.postName}"
+               required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="categoryId">카테고리</label>
+
+        <select id="categoryId" name="categoryId">
+            <option value="0"
+                    th:selected="${selectedCategoryId == 0}">
+                카테고리 없음
+            </option>
+
+            <option th:each="category : ${categories}"
+                    th:if="${category.id != 0}"
+                    th:value="${category.id}"
+                    th:text="${category.categoryName}"
+                    th:selected="${category.id == selectedCategoryId}">
+                카테고리명
+            </option>
+        </select>
+    </div>
+
+    <br>
+
+    <div>
+        <label>
+            <input type="checkbox"
+                   name="isOpen"
+                   th:checked="${post.isOpen}">
+            공개
+        </label>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="content">내용</label>
+        <br>
+        <textarea id="content"
+                  name="content"
+                  rows="10"
+                  cols="80"
+                  th:text="${post.content}"
+                  required></textarea>
+    </div>
+
+    <br>
+
+    <button type="submit">수정 완료</button>
+
+</form>
+
+<hr>
+
+<a th:href="@{/posts/{postId}(postId=${post.id})}">상세 화면으로 돌아가기</a>
+<a href="/posts">목록으로 이동</a>
+
+</body>
+</html>

@@ -17,4 +17,6 @@ public class Category {
     private String categoryName;
 
     public Map<Integer, Post> postMap;
+
+
 }
