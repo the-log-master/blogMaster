@@ -80,7 +80,6 @@
                 console.log(cat);
 
 
-                //th:text="${cat.id == 0} ? |📁 ${cat.categoryName ?: '미분류'}| : |📂 ${cat.categoryName}|
                 li.innerHTML = `
                             <a href="/index?categoryId=${cat.id}" class="flex justify-between">
                                 <span>${cat.id === 0 ? '📁 미분류' : '📂 '+cat.categoryName}</span>

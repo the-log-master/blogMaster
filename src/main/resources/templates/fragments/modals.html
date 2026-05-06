@@ -23,7 +23,7 @@
     </dialog>
 
     <script>
-        // 모달을 열 때 이 함수를 호출해야 합니다!
+        // 모달열때
         async function openCategoryModal() {
             //모달 열때 alert 띄우기
             var result = confirm("카테고리 관리를 저장하면 현재 페이지 정보가 날라갈 수 있습니다.\n" +
@@ -37,7 +37,7 @@
                 document.getElementById('category_modal').showModal();
 
                 try {
-                    // 2. 서버 API 호출 (주소가 /api/categories 인지 확인!)
+                    // API 호출 (주소가 /api/categories 인지 확인!)
                     const response = await fetch('/api/categories');
                     if (!response.ok) throw new Error('데이터 응답 에러');
 
@@ -47,7 +47,7 @@
 
                     container.innerHTML = ''; // 로딩 문구 제거
 
-                    // 3. 받아온 데이터 뿌리기
+                    // 받아온 데이터 뿌리기
                     categories.forEach(cat => {
                         // 이름이 null이 아닌 것만 (id 0번 등 필터링)
                         if (cat.categoryName !== null) {
@@ -102,10 +102,10 @@
                     });
 
                     if (response.ok) {
-                        // 성공 시 모달 닫고 페이지 새로고침!
+                        // 성공 시 모달 닫고 페이지 새로고침
                         const modal = document.getElementById('category_modal');
                         modal.close();
-                        location.reload(); // ㅇㅊㅇ! 여기서 새로고침이 일어납니다.
+                        location.reload(); //새로고침
                     } else {
                         alert('저장에 실패했습니다.');
                     }

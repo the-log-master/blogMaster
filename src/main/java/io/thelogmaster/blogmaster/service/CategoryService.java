@@ -13,14 +13,6 @@ import java.util.Map;
 
 @Service
 public class CategoryService {
-    private final MemoryRepository memoryRepository;
-
-
-    //생성자
-    public CategoryService(MemoryRepository memoryRepository){
-        this.memoryRepository = memoryRepository;
-    }
-
 
     /**
      * 전체 카테고리 리스트 반환
