@@ -62,7 +62,7 @@ public class MemoryRepository {
 
 
     private static Post genPost() {
-        Map<Integer, Comment> commentMap = new HashMap<>();
+        Map<Integer, Comment> commentMap = new LinkedHashMap<>();
 
         Post post = new Post(
                 postCount,

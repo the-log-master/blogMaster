@@ -141,8 +141,31 @@
             </form>
         </div>
 
+        <script th:inline ="javascript">
+            function openEdit(id) {
+                document.getElementById("comment-content-" + id).style.display = "none";
+                document.getElementById("comment-buttons-" + id).style.display = "none";
+                document.getElementById("edit-area-" + id).style.display = "block";
+            }
+
+            function closeEdit(id) {
+                document.getElementById("comment-content-" + id).style.display = "block";
+                document.getElementById("comment-buttons-" + id).style.display = "flex";
+                document.getElementById("edit-area-" + id).style.display = "none";
+            }
+
+            function openReply(id) {
+                document.getElementById("reply-area-" + id).style.display = "block";
+            }
+
+            function closeReply(id) {
+                document.getElementById("reply-area-" + id).style.display = "none";
+            }
+        </script>
+
     </div>
 </div>
+<<<<<<< Updated upstream
 
 
 
@@ -168,5 +191,7 @@
 <!--    }-->
 <!--</script>-->
 
+=======
+>>>>>>> Stashed changes
 </body>
 </html>
