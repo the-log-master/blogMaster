@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
-import static io.thelogmaster.blogmaster.repository.MemoryRepository.categoryMap;
+import static io.thelogmaster.blogmaster.repository.MemoryRepository.*;
 
 @Controller
 public class testController {
@@ -70,6 +71,7 @@ public class testController {
                 });
         writer.flush();
     }
+
 
     @GetMapping(path = "/comment")
     public void testPage3 (HttpServletRequest req, HttpServletResponse resp) throws IOException {
