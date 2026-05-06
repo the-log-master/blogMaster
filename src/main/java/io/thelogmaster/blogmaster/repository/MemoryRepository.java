@@ -14,6 +14,9 @@ import java.util.*;
 @Repository
 public class MemoryRepository {
     public static Map<Integer, Category> categoryMap = new HashMap<>();
+    public static Map<Integer, Integer> postCategoryMap = new HashMap<>();
+    public static List<Integer> entirePostIdList = new ArrayList<>();
+    public static Map<Integer, List<Integer>> categoryPostIdList = new HashMap<>();
 
     // 개발용 샘플 데이터 생성 로직, 서비스 완성시 제거할 것
     static Random random = new Random(
@@ -22,7 +25,7 @@ public class MemoryRepository {
                     .toEpochMilli());
     static Lorem lorem = LoremIpsum.getInstance();
 
-    public static int categoryCount= random.nextInt(2, 4);
+    public static int categoryCount= random.nextInt(15, 25);
     public static int postCount = 1;
     public static int commentCount = 1;
 
@@ -66,14 +69,18 @@ public class MemoryRepository {
 
     private static Category genCategory(int id) {
         Map<Integer, Post> postMap = new HashMap<>();
+        categoryPostIdList.put(id, new ArrayList<>());
 
         Category category = new Category(id, lorem.getName(), postMap);
-        int n = random.nextInt(10);
+        int n = random.nextInt(10, 20);
 
         for (int i = 0; i < n; i += 1) {
             Post post = genPost();
             postMap.put(postCount, post);
             post.getCategoryMap().put(id, category);
+            entirePostIdList.add(postCount);
+            categoryPostIdList.get(id).add(postCount);
+            postCategoryMap.put(postCount, id);
             postCount += 1;
         }
 
@@ -115,7 +122,11 @@ public class MemoryRepository {
         h3.put(0, nonTitledCategory);
 
         categoryMap.put(0, nonTitledCategory);
-        
+        postCategoryMap.put(0, 0);
+        categoryPostIdList.put(0, new ArrayList<>());
+        categoryPostIdList.get(0).add(0);
+        entirePostIdList.add(0);
+
        for (int i = 1; i < categoryCount; i += 1) {
            categoryMap.put(i, genCategory(i));
        }
