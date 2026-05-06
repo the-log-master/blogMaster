@@ -14,19 +14,29 @@ public class PostListController {
     @GetMapping(path = "/")
     public String showPostList(
             @RequestParam(defaultValue = "-1") int category,
-            @RequestParam(defaultValue = "1") int idx,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "false") boolean isPrivate,
             Model model) {
 
         List<Integer> postIdList =
                 category < 0
-                        ? MemoryRepository.entirePostIdList
-                        : MemoryRepository.categoryPostIdList.get(category);
+                        ? (
+                        isPrivate
+                        ? MemoryRepository.entirePrivatePostIdList
+                        : MemoryRepository.entirePublicPostIdList
+                )
+
+                        : (
+                        isPrivate
+                        ? MemoryRepository.categoryPostIdList.get(category)
+                        : MemoryRepository.categoryPostIdList.get(category * 10000)
+                );
 
         List<Post> postList = PostListService.queryPostList(
                 postIdList,
                 MemoryRepository.postCategoryMap,
                 MemoryRepository.categoryMap,
-                idx
+                page
         );
 
         model.addAttribute(postList);

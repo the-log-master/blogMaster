@@ -15,7 +15,8 @@ import java.util.*;
 public class MemoryRepository {
     public static Map<Integer, Category> categoryMap = new HashMap<>();
     public static Map<Integer, Integer> postCategoryMap = new HashMap<>();
-    public static List<Integer> entirePostIdList = new ArrayList<>();
+    public static List<Integer> entirePublicPostIdList = new ArrayList<>();
+    public static List<Integer> entirePrivatePostIdList = new ArrayList<>();
     public static Map<Integer, List<Integer>> categoryPostIdList = new HashMap<>();
 
     // 개발용 샘플 데이터 생성 로직, 서비스 완성시 제거할 것
@@ -78,7 +79,7 @@ public class MemoryRepository {
             Post post = genPost();
             postMap.put(postCount, post);
             post.getCategoryMap().put(id, category);
-            entirePostIdList.add(postCount);
+            entirePublicPostIdList.add(postCount);
             categoryPostIdList.get(id).add(postCount);
             postCategoryMap.put(postCount, id);
             postCount += 1;
@@ -125,7 +126,7 @@ public class MemoryRepository {
         postCategoryMap.put(0, 0);
         categoryPostIdList.put(0, new ArrayList<>());
         categoryPostIdList.get(0).add(0);
-        entirePostIdList.add(0);
+        entirePublicPostIdList.add(0);
 
        for (int i = 1; i < categoryCount; i += 1) {
            categoryMap.put(i, genCategory(i));
