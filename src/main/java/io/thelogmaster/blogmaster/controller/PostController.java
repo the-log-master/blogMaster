@@ -21,12 +21,12 @@ public class PostController {
 
     // 게시글 목록 화면
 // 팀원 2가 목록/페이징 만들기 전까지 임시 사용
-    @GetMapping
+   /* @GetMapping
     public String postList(Model model) {
         model.addAttribute("posts", postService.getPostList());
 
         return "post/list";
-    }//여기까지
+    }*///여기까지
 
     // 게시글 작성 폼
     @GetMapping("/write")

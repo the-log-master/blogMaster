@@ -42,7 +42,7 @@ public class testController {
         writer.flush();
     }
 
-    @GetMapping(path = "/posts")
+    @GetMapping(path = "/testPosts")
     public void testPage2(
             @RequestParam(defaultValue = "0") int id,
             HttpServletRequest req,
@@ -67,9 +67,9 @@ public class testController {
         print(writer, "==============================");
 
         //메모리상 미분류가 null로 처리되서 ...
-        int id = changeIntegerNum(req.getParameter("id"));
+        int testId = changeIntegerNum(req.getParameter("id"));
 
-        categoryMap.get(id)
+        categoryMap.get(testId)
                 .postMap.forEach((_, post) -> {
                     print(writer, String.valueOf(post.getId()));
                     print(writer, post.getUserName());
@@ -128,11 +128,11 @@ public class testController {
     }
 
     //index 확인용
-    @GetMapping("/index")
+    /*@GetMapping("/index")
     public String showIndexPage(){
         System.out.println("!!");
         return "index";
-    }
+    }*/
 
     @GetMapping(path = "/post/all")
     public void allPosts(HttpServletRequest req, HttpServletResponse resp) throws IOException {

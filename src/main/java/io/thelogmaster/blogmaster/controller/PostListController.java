@@ -11,7 +11,7 @@ import java.util.List;
 
 @Controller
 public class PostListController {
-    @GetMapping(path = "/")
+    @GetMapping(path = "/posts")
     public String showPostList(
             @RequestParam(defaultValue = "-1") int category,
             @RequestParam(defaultValue = "1") int idx,
@@ -29,9 +29,10 @@ public class PostListController {
                 idx
         );
 
-        model.addAttribute(postList);
+        //model.addAttribute(postList);
+        model.addAttribute("postList", postList);
 
-        return "index";
+        return "post/list";
     }
 
 
