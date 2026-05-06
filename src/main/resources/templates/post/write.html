@@ -1,71 +1,149 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" layout:decorate="~{layouts/base_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>게시글 작성</title>
 </head>
 <body>
 
-<h1>게시글 작성</h1>
+<!-- 본문 내용 (index.html 등에서 채워짐) -->
+<!-- .mx-auto.mt-4 대신 공백으로 구분한 클래스명을 사용하세요 -->
+<div class="container mx-auto p-4" layout:fragment="contents">
 
-<form action="/posts/write" method="post">
 
-    <div>
-        <label for="userName">작성자</label>
-        <input type="text" id="userName" name="userName" placeholder="작성자 이름">
-    </div>
+    <h2 class="text-2xl font-bold mb-6 text-primary">게시글 작성</h2>
 
-    <br>
+    <form action="/posts/write" class="space-y-6" method="post">
 
-    <div>
-        <label for="postName">제목</label>
-        <input type="text" id="postName" name="postName" required>
-    </div>
+        <!-- 작성자 & 제목 (반응형 그리드) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 작성자 -->
+            <div class="form-control w-full">
+                <label class="label" for="userName">
+                    <span class="label-text font-semibold">작성자</span>
+                </label>
+                <input class="input input-bordered w-full focus:input-primary" id="userName" name="userName" placeholder="작성자 이름을 입력하세요"
+                       type="text"/>
+            </div>
 
-    <br>
+            <!-- 카테고리 선택 -->
+            <div class="form-control w-full">
+                <label class="label" for="categoryId">
+                    <span class="label-text font-semibold">카테고리</span>
+                </label>
+                <select class="select select-bordered w-full focus:select-primary" id="categoryId" name="categoryId">
+                    <option value="0">카테고리 없음</option>
+                    <option th:each="category : ${categories}"
+                            th:if="${category.id != 0}"
+                            th:text="${category.categoryName}"
+                            th:value="${category.id}">카테고리명
+                    </option>
+                </select>
+            </div>
+        </div>
 
-    <div>
-        <label for="categoryId">카테고리</label>
+        <!-- 제목 -->
+        <div class="form-control w-full">
+            <label class="label" for="postName">
+                <span class="label-text font-semibold">제목</span>
+            </label>
+            <input class="input input-bordered w-full focus:input-primary" id="postName" name="postName" placeholder="제목을 입력하세요"
+                   required type="text"/>
+        </div>
 
-        <select id="categoryId" name="categoryId">
-            <option value="0">카테고리 없음</option>
+        <!-- 공개 여부 (토글 또는 체크박스) -->
+        <div class="form-control w-fit">
+            <label class="label cursor-pointer gap-4">
+                <span class="label-text font-semibold">공개 설정</span>
+                <input checked class="checkbox checkbox-primary" name="isOpen" type="checkbox"/>
+            </label>
+        </div>
 
-            <option th:each="category : ${categories}"
-                    th:if="${category.id != 0}"
-                    th:value="${category.id}"
-                    th:text="${category.categoryName}">
-                카테고리명
-            </option>
-        </select>
-    </div>
+        <!-- 내용 -->
+        <div class="form-control w-full">
+            <label class="label" for="content">
+                <span class="label-text font-semibold">내용</span>
+            </label>
+            <textarea class="textarea textarea-bordered w-full h-[40vh] text-base focus:textarea-primary" id="content" name="content" placeholder="내용을 입력하세요"
+                      required></textarea>
+        </div>
 
-    <br>
+        <!-- 하단 버튼 영역 -->
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+            <button class="btn btn-ghost sm:w-24" type="reset">초기화</button>
+            <button class="btn btn-primary sm:w-32" type="submit">
+                <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="2"/>
+                </svg>
+                작성하기
+            </button>
+        </div>
 
-    <div>
-        <label>
-            <input type="checkbox" name="isOpen" checked>
-            공개
-        </label>
-    </div>
+    </form>
 
-    <br>
 
-    <div>
-        <label for="content">내용</label>
-        <br>
-        <textarea id="content" name="content" rows="10" cols="80" required></textarea>
-    </div>
+    <!--  <form action="/posts/write" method="post">
 
-    <br>
+          <div>
+              <label for="userName">작성자</label>
+              <input id="userName" name="userName" placeholder="작성자 이름" type="text">
+          </div>
 
-    <button type="submit">작성</button>
-    <button type="reset">초기화</button>
+          <br>
 
-</form>
+          <div>
+              <label for="postName">제목</label>
+              <input id="postName" name="postName" required type="text">
+          </div>
 
-<hr>
+          <br>
 
-<a href="/posts">목록으로 이동</a>
+          <div>
+              <label for="categoryId">카테고리</label>
 
+              <select id="categoryId" name="categoryId">
+                  <option value="0">카테고리 없음</option>
+
+                  <option th:each="category : ${categories}"
+                          th:if="${category.id != 0}"
+                          th:text="${category.categoryName}"
+                          th:value="${category.id}">
+                      카테고리명
+                  </option>
+              </select>
+          </div>
+
+          <br>
+
+          <div>
+              <label>
+                  <input checked name="isOpen" type="checkbox">
+                  공개
+              </label>
+          </div>
+
+          <br>
+
+          <div>
+              <label for="content">내용</label>
+              <br>
+              <textarea cols="80" id="content" name="content" required rows="10"></textarea>
+          </div>
+
+          <br>
+
+          <button type="submit">작성</button>
+          <button type="reset">초기화</button>
+
+      </form>-->
+
+    <hr>
+
+    <a href="/posts">목록으로 이동</a>
+</div>
 </body>
 </html>

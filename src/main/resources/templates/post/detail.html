@@ -1,88 +1,95 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html layout:decorate="~{layouts/base_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>게시글 상세</title>
 </head>
 <body>
 
-<h1>게시글 상세</h1>
+<!-- 본문 내용 (index.html 등에서 채워짐) -->
+<!-- .mx-auto.mt-4 대신 공백으로 구분한 클래스명을 사용하세요 -->
+<div class="container mx-auto p-4" layout:fragment="contents">
 
-<div>
-    <p>
-        <strong>글 번호:</strong>
-        <span th:text="${post.id}">1</span>
-    </p>
+    <h1>게시글 상세</h1>
 
-    <p>
-        <strong>제목:</strong>
-        <span th:text="${post.postName}">제목</span>
-    </p>
+    <div>
+        <p>
+            <strong>글 번호:</strong>
+            <span th:text="${post.id}">1</span>
+        </p>
 
-    <p>
-        <strong>작성자:</strong>
-        <span th:text="${post.userName}">작성자</span>
-    </p>
+        <p>
+            <strong>제목:</strong>
+            <span th:text="${post.postName}">제목</span>
+        </p>
 
-    <p>
-        <strong>조회수:</strong>
-        <span th:text="${post.viewCount}">0</span>
-    </p>
+        <p>
+            <strong>작성자:</strong>
+            <span th:text="${post.userName}">작성자</span>
+        </p>
 
-    <p>
-        <strong>공개 여부:</strong>
-        <span th:text="${post.isOpen ? '공개' : '비공개'}">공개</span>
-    </p>
+        <p>
+            <strong>조회수:</strong>
+            <span th:text="${post.viewCount}">0</span>
+        </p>
 
-    <p>
-        <strong>카테고리:</strong>
-        <span th:text="${categoryName}">카테고리 없음</span>
-    </p>
+        <p>
+            <strong>공개 여부:</strong>
+            <span th:text="${post.isOpen ? '공개' : '비공개'}">공개</span>
+        </p>
 
-    <p>
-        <strong>작성일:</strong>
-        <span th:text="${post.createdAt}">작성일</span>
-    </p>
+        <p>
+            <strong>카테고리:</strong>
+            <span th:text="${categoryName}">카테고리 없음</span>
+        </p>
 
-    <p>
-        <strong>수정일:</strong>
-        <span th:text="${post.updateAt}">수정일</span>
-    </p>
+        <p>
+            <strong>작성일:</strong>
+            <span th:text="${post.createdAt}">작성일</span>
+        </p>
+
+        <p>
+            <strong>수정일:</strong>
+            <span th:text="${post.updateAt}">수정일</span>
+        </p>
+
+        <hr>
+
+        <div>
+            <strong>내용</strong>
+            <div th:utext="${post.content}">
+                게시글 내용
+            </div>
+        </div>
+    </div>
 
     <hr>
 
+    <a th:href="@{/posts/{postId}/edit(postId=${post.id})}">수정</a>
+
+    <form method="post" style="display:inline;" th:action="@{/posts/{postId}/delete(postId=${post.id})}">
+        <button type="submit">삭제</button>
+    </form>
+
+    <a href="/posts">목록으로 이동</a>
+    <!--<a href="javascript:history.back();">목록으로 이동</a>-->
+
+    <hr>
+
+    <h2>댓글 영역</h2>
+
     <div>
-        <strong>내용</strong>
-        <div th:utext="${post.content}">
-            게시글 내용
-        </div>
+        <!--<p>댓글 담당자가 만든 fragment가 나중에 여기에 들어갑니다.</p>
+
+        <ul>
+            <li th:each="comment : ${comments}">
+                <span th:text="${comment.content}">댓글 내용</span>
+            </li>
+        </ul>-->
+
+        <div th:replace="~{fragments/comment_section :: commentArea}"></div>
     </div>
 </div>
-
-<hr>
-
-<a th:href="@{/posts/{postId}/edit(postId=${post.id})}">수정</a>
-
-<form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post" style="display:inline;">
-    <button type="submit">삭제</button>
-</form>
-
-<a href="/posts">목록으로 이동</a>
-<!--<a href="javascript:history.back();">목록으로 이동</a>-->
-
-<hr>
-
-<h2>댓글 영역</h2>
-
-<div>
-    <p>댓글 담당자가 만든 fragment가 나중에 여기에 들어갑니다.</p>
-
-    <ul>
-        <li th:each="comment : ${comments}">
-            <span th:text="${comment.content}">댓글 내용</span>
-        </li>
-    </ul>
-</div>
-
 </body>
 </html>
