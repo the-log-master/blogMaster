@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
@@ -33,7 +34,7 @@ public class Comment {
 
     public void setPost(Post post) {
         if (this.postMap == null) {
-            this.postMap = new HashMap<>();
+            this.postMap = new LinkedHashMap<>();
         }
 
         this.postMap.put(post.getId(), post);

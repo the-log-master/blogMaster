@@ -41,6 +41,16 @@ public class CommentService {
                     addChildren(parent.getId(), allComments, result, visited);
                 });
 
+        result.forEach(comment ->
+                log.info(
+                        "OUTPUT id={}, parentId={}, depth={}, content={}",
+                        comment.getId(),
+                        comment.getParentId(),
+                        comment.getDepth(),
+                        comment.getContent()
+                )
+        );
+
         return result;
     }
 
@@ -61,6 +71,12 @@ public class CommentService {
         int depth = parent.getDepth() + 1;
 
         addCommentInternal(postId, content, parentId, depth);
+
+        log.info(
+                "ADD REPLY parentId={}, content={}",
+                parentId,
+                content
+        );
     }
 
     private void addCommentInternal(
@@ -87,7 +103,7 @@ public class CommentService {
                 now,
                 parentId,
                 depth,
-                new HashMap<>()
+                new LinkedHashMap<>()
         );
 
         comment.setPost(post);
