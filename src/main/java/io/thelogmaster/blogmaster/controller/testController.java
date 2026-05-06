@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,8 +42,13 @@ public class testController {
         writer.flush();
     }
 
-    @GetMapping(path = "/post")
-    public void testPage2 (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    @GetMapping(path = "/testPosts")
+    public void testPage2(
+            @RequestParam(defaultValue = "0") int id,
+            HttpServletRequest req,
+            HttpServletResponse resp
+    ) throws IOException {
+
         resp.setHeader("Content-Type", "text/html;charset=UTF-8");
 
         PrintWriter writer = resp.getWriter();
@@ -61,9 +67,9 @@ public class testController {
         print(writer, "==============================");
 
         //메모리상 미분류가 null로 처리되서 ...
-        int id = changeIntegerNum(req.getParameter("id"));
+        int testId = changeIntegerNum(req.getParameter("id"));
 
-        categoryMap.get(id)
+        categoryMap.get(testId)
                 .postMap.forEach((_, post) -> {
                     print(writer, String.valueOf(post.getId()));
                     print(writer, post.getUserName());
@@ -81,7 +87,12 @@ public class testController {
 
 
     @GetMapping(path = "/comment")
-    public void testPage3 (HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void testPage3(
+            @RequestParam(defaultValue = "0") int id_cat,
+            @RequestParam(defaultValue = "0") int id_post,
+            HttpServletRequest req,
+            HttpServletResponse resp
+    ) throws IOException {
         resp.setHeader("Content-Type", "text/html;charset=UTF-8");
 
         PrintWriter writer = resp.getWriter();
@@ -117,11 +128,11 @@ public class testController {
     }
 
     //index 확인용
-    @GetMapping("/index")
+    /*@GetMapping("/index")
     public String showIndexPage(){
         System.out.println("!!");
         return "index";
-    }
+    }*/
 
     @GetMapping(path = "/post/all")
     public void allPosts(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -170,4 +181,5 @@ public class testController {
         return Integer.parseInt(changeObj);
 
     }
+
 }
