@@ -23,7 +23,7 @@ public class CategoryService {
         for(Category category : categories){
             //카테고리에 속한 post의 수
             int postCount = category.getPostMap().size();
-            System.out.println("postCount:"+postCount);
+            //System.out.println("postCount:"+postCount);
         }
 
         return new ArrayList<>(MemoryRepository.categoryMap.values());
