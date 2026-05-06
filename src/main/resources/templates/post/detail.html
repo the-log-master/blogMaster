@@ -36,7 +36,8 @@
     <div class="divider"></div>
 
     <!-- 내용 영역 -->
-    <div class="py-4 min-h-[300px] leading-relaxed text-lg" th:utext="${post?.content}">
+    <!-- 줄바꿈 처리 적용-->
+    <div class="py-4 min-h-[300px] leading-relaxed text-lg" th:utext="${#strings.escapeXml(post?.content).replaceAll('\n', '&lt;br&gt;')}">
         게시글 내용이 여기에 표시됩니다.
     </div>
 
