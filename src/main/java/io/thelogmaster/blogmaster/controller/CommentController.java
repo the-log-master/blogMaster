@@ -4,10 +4,8 @@ import io.thelogmaster.blogmaster.model.Comment;
 import io.thelogmaster.blogmaster.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -15,12 +13,10 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-//
+
     @GetMapping("/posts/{postId}/comments")
     @ResponseBody
-    public List<Comment> getCommentsByPost(
-            @PathVariable int postId
-    ) {
+    public List<Comment> getCommentsByPost(@PathVariable int postId) {
         return commentService.getCommentsByPost(postId);
     }
 
@@ -29,8 +25,19 @@ public class CommentController {
             @PathVariable int postId,
             @RequestParam String content
     ) {
-
         commentService.addComment(postId, content);
+
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/posts/{postId}/comments/{commentId}/reply")
+    public String addReply(
+            @PathVariable int postId,
+            @PathVariable int commentId,
+            @RequestParam String content
+    ) {
+        commentService.addReply(postId, commentId, content);
+
         return "redirect:/posts/" + postId;
     }
 
@@ -54,16 +61,4 @@ public class CommentController {
 
         return "redirect:/posts/" + postId;
     }
-
-    @GetMapping("/test/comment")
-    public String testComment(Model model) {
-
-        int postId = 0;
-
-        model.addAttribute("postId", postId);
-        model.addAttribute("comments", commentService.getCommentsByPost(postId));
-
-        return "fragments/comment_section :: commentArea";
-    }
-
 }

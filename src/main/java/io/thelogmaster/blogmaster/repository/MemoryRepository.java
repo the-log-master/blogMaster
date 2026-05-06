@@ -38,6 +38,8 @@ public class MemoryRepository {
                 lorem.getParagraphs(2, 5),
                 LocalDateTime.now(),
                 LocalDateTime.now(),
+                -1,
+                0,
                 new HashMap<>());
     }
 
@@ -52,7 +54,8 @@ public class MemoryRepository {
      * postId로 Post 찾기
      */
     public Optional<Post> findPostById(int postId) {
-        return categoryMap.values().stream()
+        return categoryMap.values()
+                .stream()
                 .flatMap(category -> category.getPostMap().values().stream())
                 .filter(post -> post.getId() == postId)
                 .findFirst();
@@ -60,7 +63,7 @@ public class MemoryRepository {
 
 
     private static Post genPost() {
-        Map<Integer, Comment> commentMap = new HashMap<>();
+        Map<Integer, Comment> commentMap = new LinkedHashMap<>();
 
         Post post = new Post(
                 postCount,
@@ -118,6 +121,8 @@ public class MemoryRepository {
                 "한글 댓글 내용",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
+                -1,
+                0,
                 h2
         );
 
