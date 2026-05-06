@@ -30,6 +30,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {

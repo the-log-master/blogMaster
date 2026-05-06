@@ -1,3 +1,10 @@
 spring:
   application:
     name: blogMaster
+
+thymeleaf:
+  prefix: classpath:/templates/
+  suffix: .html
+  cache: false
+  # 만약 레이아웃이 여전히 안 된다면 아래 설정을 추가 확인하세요
+  check-template-location: true
