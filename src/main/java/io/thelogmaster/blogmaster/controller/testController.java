@@ -41,49 +41,49 @@ public class testController {
         });
         writer.flush();
     }
-
-    @GetMapping(path = "/posts")
-    public void testPage2(
-            @RequestParam(defaultValue = "0") int id,
-            HttpServletRequest req,
-            HttpServletResponse resp
-    ) throws IOException {
-
-        resp.setHeader("Content-Type", "text/html;charset=UTF-8");
-
-        PrintWriter writer = resp.getWriter();
-
-        print(writer, "포스트 목록");
-        print(writer, "==============================");
-        print(writer, "포스트 아이디");
-        print(writer, "유저 이름");
-        print(writer, "카테고리명");
-        print(writer, "공개 여부");
-        print(writer, "포스트 이름");
-        print(writer, "포스트 내용");
-        print(writer, "작성 일자");
-        print(writer, "업데이트 일자");
-        print(writer, "댓글 갯수");
-        print(writer, "==============================");
-
-        //메모리상 미분류가 null로 처리되서 ...
-        int id = changeIntegerNum(req.getParameter("id"));
-
-        categoryMap.get(id)
-                .postMap.forEach((_, post) -> {
-                    print(writer, String.valueOf(post.getId()));
-                    print(writer, post.getUserName());
-                    print(writer, String.valueOf(post.categoryMap.get("categoryName")));
-                    print(writer, String.valueOf(post.getIsOpen()));
-                    print(writer, post.getPostName());
-                    print(writer, post.getContent());
-                    print(writer, String.valueOf(post.getCreatedAt()));
-                    print(writer, String.valueOf(post.getUpdateAt()));
-                    print(writer, String.valueOf(post.commentMap.size()));
-                    print(writer, "==============================");
-                });
-        writer.flush();
-    }
+//
+//    @GetMapping(path = "/posts")
+//    public void testPage2(
+//            @RequestParam(defaultValue = "0") int id,
+//            HttpServletRequest req,
+//            HttpServletResponse resp
+//    ) throws IOException {
+//
+//        resp.setHeader("Content-Type", "text/html;charset=UTF-8");
+//
+//        PrintWriter writer = resp.getWriter();
+//
+//        print(writer, "포스트 목록");
+//        print(writer, "==============================");
+//        print(writer, "포스트 아이디");
+//        print(writer, "유저 이름");
+//        print(writer, "카테고리명");
+//        print(writer, "공개 여부");
+//        print(writer, "포스트 이름");
+//        print(writer, "포스트 내용");
+//        print(writer, "작성 일자");
+//        print(writer, "업데이트 일자");
+//        print(writer, "댓글 갯수");
+//        print(writer, "==============================");
+//
+//        //메모리상 미분류가 null로 처리되서 ...
+//        id = changeIntegerNum(req.getParameter("id"));
+//
+//        categoryMap.get(id)
+//                .postMap.forEach((_, post) -> {
+//                    print(writer, String.valueOf(post.getId()));
+//                    print(writer, post.getUserName());
+//                    print(writer, String.valueOf(post.categoryMap.get("categoryName")));
+//                    print(writer, String.valueOf(post.getIsOpen()));
+//                    print(writer, post.getPostName());
+//                    print(writer, post.getContent());
+//                    print(writer, String.valueOf(post.getCreatedAt()));
+//                    print(writer, String.valueOf(post.getUpdateAt()));
+//                    print(writer, String.valueOf(post.commentMap.size()));
+//                    print(writer, "==============================");
+//                });
+//        writer.flush();
+//    }
 
     @GetMapping(path = "/comment")
     public void testPage3(
