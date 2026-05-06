@@ -28,4 +28,6 @@ public class Category {
 
     @JsonIgnore // JSON 변환시 필드는 무시 (순환 참조 방지)
     public Map<Integer, Post> postMap;
+
+
 }

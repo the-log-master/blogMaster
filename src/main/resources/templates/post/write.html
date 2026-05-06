@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+</head>
+<body>
+
+<h1>게시글 작성</h1>
+
+<form action="/posts/write" method="post">
+
+    <div>
+        <label for="userName">작성자</label>
+        <input type="text" id="userName" name="userName" placeholder="작성자 이름">
+    </div>
+
+    <br>
+
+    <div>
+        <label for="postName">제목</label>
+        <input type="text" id="postName" name="postName" required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="categoryId">카테고리</label>
+
+        <select id="categoryId" name="categoryId">
+            <option value="0">카테고리 없음</option>
+
+            <option th:each="category : ${categories}"
+                    th:if="${category.id != 0}"
+                    th:value="${category.id}"
+                    th:text="${category.categoryName}">
+                카테고리명
+            </option>
+        </select>
+    </div>
+
+    <br>
+
+    <div>
+        <label>
+            <input type="checkbox" name="isOpen" checked>
+            공개
+        </label>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="content">내용</label>
+        <br>
+        <textarea id="content" name="content" rows="10" cols="80" required></textarea>
+    </div>
+
+    <br>
+
+    <button type="submit">작성</button>
+    <button type="reset">초기화</button>
+
+</form>
+
+<hr>
+
+<a href="/posts">목록으로 이동</a>
+
+</body>
+</html>

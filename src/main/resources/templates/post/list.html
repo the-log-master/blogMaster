@@ -13,10 +13,22 @@
 
     <!-- 검색창 영역 -->
     <div class="flex justify-end mb-4">
-        <div class="join">
-            <input class="input input-bordered join-item" placeholder="검색어를 입력하세요" />
-            <button class="btn btn-primary join-item">검색</button>
+        <div class="flex flex-col gap-2 p-4">
+            <div class="form-control">
+                <label class="label cursor-pointer justify-start gap-3">
+                    <input type="checkbox" class="checkbox checkbox-primary" />
+                    <span class="label-text">공개</span>
+                </label>
+            </div>
+
+            <div class="form-control">
+                <label class="label cursor-pointer justify-start gap-3">
+                    <input type="checkbox" class="checkbox checkbox-secondary" />
+                    <span class="label-text">비공개</span>
+                </label>
+            </div>
         </div>
+
     </div>
 
     <!-- 게시판 목록 테이블 -->
@@ -27,31 +39,21 @@
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
+                <th>공개 여부</th>
                 <th>작성일</th>
                 <th>조회수</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="hover">
-                <th>3</th>
-                <td><a href="#" class="link link-hover font-semibold">DaisyUI로 게시판을 만들어 보았습니다.</a></td>
-                <td>홍길동</td>
-                <td>2026-05-04</td>
-                <td>42</td>
-            </tr>
-            <tr class="hover">
-                <th>2</th>
-                <td><a href="#" class="link link-hover font-semibold">Tailwind CSS와 DaisyUI의 조합</a></td>
-                <td>김철수</td>
-                <td>2026-05-03</td>
-                <td>128</td>
-            </tr>
-            <tr class="hover">
-                <th>1</th>
-                <td><a href="#" class="link link-hover font-semibold">게시판 첫 번째 글입니다.</a></td>
-                <td>이영희</td>
-                <td>2026-05-01</td>
-                <td>256</td>
+            <tr th:each="post : ${postList}" class="hover">
+                <td th:text="${post.id}">id</td>
+                <td>
+                    <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.postName}">postName</a>
+                </td>
+                <td th:text="${post.userName}">userName</td>
+                <td th:text="${post.isOpen ? '공개' : '비공개'}">공개</td>
+                <td th:text="${post.createdAt}">createdAt</td>
+                <td th:text="${post.viewCount}">viewCount</td>
             </tr>
             </tbody>
         </table>
@@ -59,7 +61,9 @@
 
     <!-- 페이지네이션 및 글쓰기 버튼 영역 -->
     <div class="flex justify-between items-center mt-6">
-        <div></div> <!-- 빈 공간 -->
+        <div>
+            <a href="#" class="btn btn-error">글삭제</a>
+        </div> <!-- 빈 공간 -->
 
         <div class="join">
             <button class="join-item btn">«</button>
@@ -70,7 +74,7 @@
             <button class="join-item btn">»</button>
         </div>
 
-        <a href="#" class="btn btn-primary">글쓰기</a>
+        <a href="/posts/write" class="btn btn-primary">게시글 작성</a>
     </div>
 
 </div>
