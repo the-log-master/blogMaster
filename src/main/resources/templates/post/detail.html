@@ -9,104 +9,66 @@
 
 <!-- 본문 내용 (index.html 등에서 채워짐) -->
 <!-- .mx-auto.mt-4 대신 공백으로 구분한 클래스명을 사용하세요 -->
-<div class="container mx-auto p-4" layout:fragment="contents">
-
-    <h1>게시글 상세</h1>
+<!-- 상단 헤더 영역 -->
+<div class="mx-auto p-4" layout:fragment="contents">
+    <!-- 상단 헤더 영역 -->
 
     <div>
-        <p>
-            <strong>글 번호:</strong>
-            <span th:text="${post.id}">1</span>
-        </p>
+        <div class="badge badge-outline mb-2" th:text="${categoryName}">카테고리</div>
+        <h1 class="text-3xl font-bold" th:text="${post?.postName}">게시글 제목</h1>
+    </div>
+    <div class="text-right text-sm text-gray-500">
+        <p th:text="|작성자: ${post?.userName}|">작성자</p>
+        <p th:text="|조회수: ${post?.viewCount}|">조회수: 0</p>
+    </div>
 
-        <p>
-            <strong>제목:</strong>
-            <span th:text="${post.postName}">제목</span>
-        </p>
 
-        <p>
-            <strong>작성자:</strong>
-            <span th:text="${post.userName}">작성자</span>
-        </p>
+    <!-- 메인 정보 영역 -->
 
-        <p>
-            <strong>조회수:</strong>
-            <span th:text="${post.viewCount}">0</span>
-        </p>
 
-        <p>
-            <strong>공개 여부:</strong>
-            <span th:text="${post.isOpen ? '공개' : '비공개'}">공개</span>
-        </p>
+    <div class="flex flex-wrap gap-4 text-sm text-gray-400 mb-4">
+        <span><strong>번호:</strong> [[${post?.id}]]</span>
+        <span><strong>공개 여부:</strong> [[${post?.isOpen ? '공개' : '비공개'}]]</span>
+        <span><strong>작성일:</strong> [[${post?.createdAt}]]</span>
+        <span th:if="${post?.updateAt != post?.createdAt}"><strong>수정일:</strong> [[${post?.updateAt}]]</span>
+    </div>
 
-        <p>
-            <strong>카테고리:</strong>
-            <span th:text="${categoryName}">카테고리 없음</span>
-        </p>
+    <div class="divider"></div>
 
-        <p>
-            <strong>작성일:</strong>
-            <span th:text="${post.createdAt}">작성일</span>
-        </p>
+    <!-- 내용 영역 -->
+    <div class="py-4 min-h-[300px] leading-relaxed text-lg" th:utext="${post?.content}">
+        게시글 내용이 여기에 표시됩니다.
+    </div>
 
-        <p>
-            <strong>수정일:</strong>
-            <span th:text="${post.updateAt}">수정일</span>
-        </p>
+    <div class="divider"></div>
 
-        <hr>
+    <!-- 버튼 영역 -->
+    <div class="card-actions justify-between items-center">
+        <a class="btn btn-ghost" href="/posts">
+            <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+            목록으로
+        </a>
 
-        <div>
-            <strong>내용</strong>
-            <div th:utext="${post.content}">
-                게시글 내용
-            </div>
+        <div class="flex gap-2">
+            <a class="btn btn-primary" th:href="@{/posts/{postId}/edit(postId=${post?.id})}">수정</a>
+
+            <!-- 삭제 버튼: Soft Delete 시에도 경고창은 띄우는 게 좋습니다 -->
+            <form method="post" onsubmit="return confirm('정말 삭제하시겠습니까? (삭제 시 목록에서 보이지 않습니다.)');"
+                  th:action="@{/posts/{postId}/delete(postId=${post?.id})}">
+                <button class="btn btn-error text-white" type="submit">삭제</button>
+            </form>
         </div>
     </div>
 
-    <hr>
 
-    <a th:href="@{/posts/{postId}/edit(postId=${post.id})}">수정</a>
-
-    <form method="post" style="display:inline;" th:action="@{/posts/{postId}/delete(postId=${post.id})}">
-        <button type="submit">삭제</button>
-    </form>
-
-    <a href="/posts">목록으로 이동</a>
-    <!--<a href="javascript:history.back();">목록으로 이동</a>-->
-
-    <hr>
-
-    <h2>댓글 영역</h2>
-
-    <div>
-        <!--<p>댓글 담당자가 만든 fragment가 나중에 여기에 들어갑니다.</p>
-
-        <ul>
-            <li th:each="comment : ${comments}">
-                <span th:text="${comment.content}">댓글 내용</span>
-            </li>
-        </ul>-->
-
+    <!-- 댓글 영역 -->
+    <div class="bg-base-200 rounded-xl p-6">
         <div th:replace="~{fragments/comment_section :: commentArea}"></div>
     </div>
 </div>
-
-
-<hr>
-
-<a th:href="@{/posts/{postId}/edit(postId=${post.id})}">수정</a>
-
-<form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post" style="display:inline;">
-    <button type="submit">삭제</button>
-</form>
-
-<a href="/posts">목록으로 이동</a>
-<!--<a href="javascript:history.back();">목록으로 이동</a>-->
-
-
-
-<hr>
 
 
 </body>

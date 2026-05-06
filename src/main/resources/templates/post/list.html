@@ -48,7 +48,7 @@
             <tr th:each="post : ${postList}" class="hover">
                 <td th:text="${post.id}">id</td>
                 <td>
-                    <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.postName}">postName</a>
+                    <a th:href="@{/posts/{id}(id=${post?.id})}" th:text="${post?.postName}">제목</a>
                 </td>
                 <td th:text="${post.userName}">userName</td>
                 <td th:text="${post.isOpen ? '공개' : '비공개'}">공개</td>
