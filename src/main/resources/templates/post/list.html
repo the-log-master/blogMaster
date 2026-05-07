@@ -45,10 +45,16 @@
             <a href="#" class="btn btn-error">글삭제</a>
         </div>--> <!-- 빈 공간 -->
 
-        <div class="join">
+        <div th:if="${categoryId>=0}" class="join">
             <button class="join-item btn" th:onclick="|location.href='/posts?category=${categoryId}&page=${prevPage}'|">이전</button>
             <button class="join-item btn" th:onclick="|location.href='/posts?category=${categoryId}&page=${nextPage}'|">다음</button>
         </div>
+
+        <div th:unless="${categoryId>=0}" class="join">
+            <button class="join-item btn" th:onclick="|location.href='/posts?page=${prevPage}'|">이전</button>
+            <button class="join-item btn" th:onclick="|location.href='/posts?page=${nextPage}'|">다음</button>
+        </div>
+
 
         <a href="/posts/write" class="btn btn-primary">게시글 작성</a>
     </div>
