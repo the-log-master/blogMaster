@@ -83,8 +83,7 @@
                 // <span class="badge badge-sm">${cat.postCount}</span>
                 li.innerHTML = `
                             <a href="/posts?category=${cat.id}" class="flex justify-between">
-                                <span>${cat.id === 0 ? '📁 미분류' : '📂 '+cat.categoryName}</span>
-                                <span class="badge badge-sm">${cat.postCount}</span>
+                                <span>${cat.id === 0 ? '📂 미분류' : '📂 '+cat.categoryName}</span>
                             </a>
                         `;
                 container.appendChild(li);
