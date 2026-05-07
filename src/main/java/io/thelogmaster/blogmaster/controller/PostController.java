@@ -17,10 +17,12 @@ public class PostController {
 
     private final PostService postService;
     private final CategoryService categoryService;
+    private final CommentService commentService;
 
-    public PostController(PostService postService, CategoryService categoryService) {
+    public PostController(PostService postService, CommentService commentService, CategoryService categoryService) {
         this.postService = postService;
         this.categoryService = categoryService;
+        this.commentService = commentService;
     }
 
     // 게시글 목록 화면
@@ -35,7 +37,7 @@ public class PostController {
     // 게시글 작성 폼
     @GetMapping("/write")
     public String writeForm(Model model) {
-        model.addAttribute("categories", categoryService.getCategoryList());
+        model.addAttribute("categories", postService.getCategoryList());
 
         return "post/write";
     }
@@ -79,7 +81,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("categoryId", postService.getCategoryIdByPostId(postId));
         model.addAttribute("categoryName", postService.getCategoryNameByPostId(postId));
-        model.addAttribute("comments", post.getCommentMap().values());
+        model.addAttribute("comments", commentService.getCommentsByPost(postId));
 
         return "post/detail";
     }
@@ -97,7 +99,7 @@ public class PostController {
         }
 
         model.addAttribute("post", postOptional.get());
-        model.addAttribute("categories", categoryService.getCategoryList());
+        model.addAttribute("categories", postService.getCategoryList());
         model.addAttribute("selectedCategoryId", postService.getCategoryIdByPostId(postId));
 
         return "post/edit";
