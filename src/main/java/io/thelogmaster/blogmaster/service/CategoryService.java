@@ -21,7 +21,7 @@ public class CategoryService {
         List<Category> categories = new ArrayList<>(MemoryRepository.categoryMap.values());
 
         for(Category category : categories){
-            //카테고리에 속한 post의 수
+            //카테고리에 속한 post의  수
             int postCount = category.getPostMap().size();
             //System.out.println("postCount:"+postCount);
         }

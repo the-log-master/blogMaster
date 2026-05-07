@@ -23,33 +23,25 @@ public class CommentService {
         Post post = memoryRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
 
-        List<Comment> allComments = post.getCommentMap()
+        List<Comment> result = new ArrayList<>();
+
+        List<Comment> rootComments = post.getCommentMap()
                 .values()
                 .stream()
+                .filter(comment -> comment.getParentId() == ROOT_PARENT_ID)
                 .sorted(Comparator.comparing(Comment::getCreatedAt))
                 .toList();
 
-        List<Comment> result = new ArrayList<>();
-        Set<Integer> visited = new HashSet<>();
+        for (Comment root : rootComments) {
 
-        allComments.stream()
-                .filter(comment -> comment.getParentId() == ROOT_PARENT_ID)
-                .forEach(parent -> {
-                    result.add(parent);
-                    visited.add(parent.getId());
+            result.add(root);
 
-                    addChildren(parent.getId(), allComments, result, visited);
-                });
-
-        result.forEach(comment ->
-                log.info(
-                        "OUTPUT id={}, parentId={}, depth={}, content={}",
-                        comment.getId(),
-                        comment.getParentId(),
-                        comment.getDepth(),
-                        comment.getContent()
-                )
-        );
+            addChildren(
+                    root.getId(),
+                    post.getCommentMap().values(),
+                    result
+            );
+        }
 
         return result;
     }
@@ -160,28 +152,24 @@ public class CommentService {
 
     private void addChildren(
             int parentId,
-            List<Comment> allComments,
-            List<Comment> result,
-            Set<Integer> visited
+            Collection<Comment> allComments,
+            List<Comment> result
     ) {
-        allComments.stream()
+
+        List<Comment> children = allComments.stream()
                 .filter(comment -> comment.getParentId() == parentId)
-                .forEach(child -> {
+                .sorted(Comparator.comparing(Comment::getCreatedAt))
+                .toList();
 
-                    if (child.getId() == parentId) {
-                        log.warn("자기참조 댓글 발견: commentId = {}", child.getId());
-                        return;
-                    }
+        for (Comment child : children) {
 
-                    if (visited.contains(child.getId())) {
-                        log.warn("순환참조 댓글 발견: commentId = {}", child.getId());
-                        return;
-                    }
+            result.add(child);
 
-                    result.add(child);
-                    visited.add(child.getId());
-
-                    addChildren(child.getId(), allComments, result, visited);
-                });
+            addChildren(
+                    child.getId(),
+                    allComments,
+                    result
+            );
+        }
     }
 }
