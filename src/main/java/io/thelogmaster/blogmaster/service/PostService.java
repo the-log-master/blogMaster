@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.thelogmaster.blogmaster.service.PostListService.addPostListItem;
+import static io.thelogmaster.blogmaster.service.PostListService.deletePostListItem;
+
 @Service
 public class PostService {
 
@@ -59,13 +62,16 @@ public class PostService {
             String content,
             Integer categoryId
     ) {
-        int saveCategoryId = categoryId == null ? 0 : categoryId;
+
+        // 0~9999 공개 포스트 10000~19999 비공개 포스트
+        int saveCategoryId = (categoryId == null ? 0 : categoryId) + 10000 * (isOpen ? 0 : 1);
 
         Category category = MemoryRepository.categoryMap.get(saveCategoryId);
 
         // 없는 카테고리 ID가 들어오면 "카테고리 없음"으로 저장
         if (category == null) {
-            category = MemoryRepository.categoryMap.get(0);
+            saveCategoryId = 10000 * (isOpen ? 0 : 1);
+            category = MemoryRepository.categoryMap.get(saveCategoryId);
         }
 
         int newPostId = MemoryRepository.postCount;
@@ -76,11 +82,13 @@ public class PostService {
         Map<Integer, Comment> commentMap = new HashMap<>();
         Map<Integer, Category> postCategoryMap = new HashMap<>();
 
+        // 공개 포스트 비공개 포스트 목록 분류
+
         Post post = new Post(
                 newPostId,
                 userName == null || userName.isBlank() ? "익명 작성자" : userName,
                 0,
-                isOpen != null && isOpen,
+                isOpen,
                 postName,
                 content,
                 now,
@@ -91,6 +99,14 @@ public class PostService {
 
         postCategoryMap.put(category.getId(), category);
         category.getPostMap().put(newPostId, post);
+
+        addPostListItem(MemoryRepository.categoryPostIdList,
+                MemoryRepository.entirePublicPostIdList,
+                MemoryRepository.entirePrivatePostIdList,
+                MemoryRepository.postCategoryMap,
+                newPostId,
+                saveCategoryId,
+                isOpen);
 
         return post;
     }
@@ -112,28 +128,47 @@ public class PostService {
         PostLocation postLocation = postLocationOptional.get();
         Post post = postLocation.getPost();
 
-        post.setIsOpen(isOpen != null && isOpen);
+        boolean oldIsOpen = post.getIsOpen();
+
+        post.setIsOpen(isOpen);
         post.setPostName(postName);
         post.setContent(content);
         post.setUpdateAt(LocalDateTime.now());
 
-        int newCategoryId = categoryId == null ? 0 : categoryId;
+        int newCategoryId = categoryId == null ? 0 : categoryId + 10000 * (isOpen ? 0 : 1);
 
         Category newCategory = MemoryRepository.categoryMap.get(newCategoryId);
 
         if (newCategory == null) {
-            newCategory = MemoryRepository.categoryMap.get(0);
+            newCategory = MemoryRepository.categoryMap.get(10000 * (isOpen ? 0 : 1));
         }
 
         Category oldCategory = postLocation.getCategory();
 
         // 카테고리가 바뀌었으면 기존 카테고리 postMap에서 빼고 새 카테고리 postMap에 넣음
-        if (oldCategory.getId() != newCategory.getId()) {
+        if (oldCategory.getId() != newCategoryId) {
+            // 기존 포스트 목록에서 제거
+            deletePostListItem(MemoryRepository.categoryPostIdList,
+                    MemoryRepository.entirePublicPostIdList,
+                    MemoryRepository.entirePrivatePostIdList,
+                    MemoryRepository.postCategoryMap,
+                    postId,
+                    oldIsOpen);
+
             oldCategory.getPostMap().remove(postId);
             newCategory.getPostMap().put(postId, post);
 
             post.getCategoryMap().clear();
             post.getCategoryMap().put(newCategory.getId(), newCategory);
+
+            // 새로운 포스트 목록에 추가
+            addPostListItem(MemoryRepository.categoryPostIdList,
+                    MemoryRepository.entirePublicPostIdList,
+                    MemoryRepository.entirePrivatePostIdList,
+                    MemoryRepository.postCategoryMap,
+                    postId,
+                    newCategoryId,
+                    isOpen);
         }
 
         return true;
@@ -150,6 +185,15 @@ public class PostService {
 
         PostLocation postLocation = postLocationOptional.get();
         postLocation.getCategory().getPostMap().remove(postId);
+
+        deletePostListItem(
+                MemoryRepository.categoryPostIdList,
+                MemoryRepository.entirePublicPostIdList,
+                MemoryRepository.entirePrivatePostIdList,
+                MemoryRepository.postCategoryMap,
+                postId,
+                postLocation.post.getIsOpen()
+        );
 
         return true;
     }

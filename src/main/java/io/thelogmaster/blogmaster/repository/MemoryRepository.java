@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
+import static io.thelogmaster.blogmaster.service.PostListService.addPostListItem;
+
 @Repository
 public class MemoryRepository {
     public static Map<Integer, Category> categoryMap = new HashMap<>();
@@ -91,30 +93,51 @@ public class MemoryRepository {
         return post;
     }
 
-    private static Category genCategory(int id) {
+    private static void genCategory(int id) {
         Map<Integer, Post> postMap = new HashMap<>();
+        Map<Integer, Post> privatePostMap = new HashMap<>();
         categoryPostIdList.put(id, new ArrayList<>());
+        categoryPostIdList.put(id + 10000, new ArrayList<>());
 
         Category category = new Category(id, lorem.getName(), postMap);
+        Category privateCategory = new Category(id + 10000, category.getCategoryName(), privatePostMap);
         int n = random.nextInt(10, 20);
 
         for (int i = 0; i < n; i += 1) {
             Post post = genPost();
-            postMap.put(postCount, post);
-            post.getCategoryMap().put(id, category);
-            entirePublicPostIdList.add(postCount);
-            categoryPostIdList.get(id).add(postCount);
-            postCategoryMap.put(postCount, id);
+
+
+            if (post.getIsOpen()) {
+                post.getCategoryMap().put(id, category);
+                postMap.put(postCount, post);
+            }
+
+            else {
+                post.getCategoryMap().put(id + 10000, privateCategory);
+                privatePostMap.put(postCount, post);
+            }
+
+            addPostListItem(
+                    categoryPostIdList,
+                    entirePublicPostIdList,
+                    entirePrivatePostIdList,
+                    postCategoryMap,
+                    post.getId(),
+                    id + (post.getIsOpen() ? 0 : 10000),
+                    post.getIsOpen()
+            );
             postCount += 1;
         }
 
-        return category;
+        categoryMap.put(id, category);
+        categoryMap.put(id + 10000, privateCategory);
     }
 
     static {
         Map<Integer, Comment> h1 = new HashMap<>();
         Map<Integer, Post> h2 = new HashMap<>();
         Map<Integer, Category> h3 = new HashMap<>();
+        Map<Integer, Post> h4 = new HashMap<>();
 
         Comment hangulComment = new Comment(
                 0,
@@ -142,19 +165,22 @@ public class MemoryRepository {
         );
 
         Category nonTitledCategory = new Category(0, null, h2);
+        Category nonTitledPrivateCategory = new Category(10000, null, h4);
 
         h1.put(0, hangulComment);
         h2.put(0, hangulPost);
         h3.put(0, nonTitledCategory);
 
         categoryMap.put(0, nonTitledCategory);
+        categoryMap.put(10000, nonTitledPrivateCategory);
         postCategoryMap.put(0, 0);
         categoryPostIdList.put(0, new ArrayList<>());
+        categoryPostIdList.put(10000, new ArrayList<>());
         categoryPostIdList.get(0).add(0);
         entirePublicPostIdList.add(0);
 
        for (int i = 1; i < categoryCount; i += 1) {
-           categoryMap.put(i, genCategory(i));
+           genCategory(i);
        }
     }
 }

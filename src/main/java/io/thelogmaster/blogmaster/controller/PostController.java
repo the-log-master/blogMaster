@@ -2,6 +2,7 @@ package io.thelogmaster.blogmaster.controller;
 
 import io.thelogmaster.blogmaster.model.Post;
 import io.thelogmaster.blogmaster.service.CommentService;
+import io.thelogmaster.blogmaster.service.CategoryService;
 import io.thelogmaster.blogmaster.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,11 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
-    private final CommentService commentService;
-    public PostController(PostService postService, CommentService commentService) {
+    private final CategoryService categoryService;
+
+    public PostController(PostService postService, CategoryService categoryService) {
         this.postService = postService;
-        this.commentService = commentService;
+        this.categoryService = categoryService;
     }
 
     // 게시글 목록 화면
@@ -33,7 +35,7 @@ public class PostController {
     // 게시글 작성 폼
     @GetMapping("/write")
     public String writeForm(Model model) {
-        model.addAttribute("categories", postService.getCategoryList());
+        model.addAttribute("categories", categoryService.getCategoryList());
 
         return "post/write";
     }
@@ -77,7 +79,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("categoryId", postService.getCategoryIdByPostId(postId));
         model.addAttribute("categoryName", postService.getCategoryNameByPostId(postId));
-        model.addAttribute("comments", commentService.getCommentsByPost(postId));
+        model.addAttribute("comments", post.getCommentMap().values());
 
         return "post/detail";
     }
@@ -95,7 +97,7 @@ public class PostController {
         }
 
         model.addAttribute("post", postOptional.get());
-        model.addAttribute("categories", postService.getCategoryList());
+        model.addAttribute("categories", categoryService.getCategoryList());
         model.addAttribute("selectedCategoryId", postService.getCategoryIdByPostId(postId));
 
         return "post/edit";
