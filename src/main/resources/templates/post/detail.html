@@ -29,8 +29,17 @@
     <div class="flex flex-wrap gap-4 text-sm text-gray-400 mb-4">
         <span><strong>번호:</strong> [[${post?.id}]]</span>
         <span><strong>공개 여부:</strong> [[${post?.isOpen ? '공개' : '비공개'}]]</span>
-        <span><strong>작성일:</strong> [[${post?.createdAt}]]</span>
-        <span th:if="${post?.updateAt != post?.createdAt}"><strong>수정일:</strong> [[${post?.updateAt}]]</span>
+        <span>
+            <strong>작성일:</strong>
+            [[${#strings.substring(#strings.replace(post.createdAt, 'T', ' '), 0, 16)}]]
+        </span>
+
+                <span th:if="${post.updateAt != null and post.updateAt != post.createdAt}">
+            <strong>수정일:</strong>
+            [[${#strings.substring(#strings.replace(post.updateAt, 'T', ' '), 0, 16)}]]
+        </span>
+        <!--<span><strong>작성일:</strong> [[${post?.createdAt}]]</span>
+        <span th:if="${post?.updateAt != post?.createdAt}"><strong>수정일:</strong> [[${post?.updateAt}]]</span>-->
     </div>
 
     <div class="divider"></div>

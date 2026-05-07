@@ -11,26 +11,6 @@
 <!-- .mx-auto.mt-4 대신 공백으로 구분한 클래스명을 사용하세요 -->
 <div class="container mx-auto p-4" layout:fragment="contents">
 
-    <!-- 검색창 영역 -->
-    <div class="flex justify-end mb-4">
-       <!-- <div class="flex flex-col gap-2 p-4">
-            <div class="form-control">
-                <label class="label cursor-pointer justify-start gap-3">
-                    <input type="checkbox" class="checkbox checkbox-primary" />
-                    <span class="label-text">공개</span>
-                </label>
-            </div>
-
-            <div class="form-control">
-                <label class="label cursor-pointer justify-start gap-3">
-                    <input type="checkbox" class="checkbox checkbox-secondary" />
-                    <span class="label-text">비공개</span>
-                </label>
-            </div>
-        </div>-->
-
-    </div>
-
     <!-- 게시판 목록 테이블 -->
     <div class="overflow-x-auto">
         <table class="table w-full">
@@ -52,8 +32,8 @@
                 </td>
                 <td th:text="${post.userName}">userName</td>
                 <td th:text="${post.isOpen ? '공개' : '비공개'}">공개</td>
-                <td th:text="${post.createdAt}">createdAt</td>
-                <td th:text="${post.viewCount}">viewCount</td>
+                <td th:text="${#strings.substring(#strings.replace(post.createdAt, 'T', ' '), 0, 16)}">2026-05-07 16:27</td>
+                <td th:text="${post.viewCount}">0</td>
             </tr>
             </tbody>
         </table>
