@@ -37,7 +37,7 @@ public class PostController {
     // 게시글 작성 폼
     @GetMapping("/write")
     public String writeForm(Model model) {
-        model.addAttribute("categories", postService.getCategoryList());
+        model.addAttribute("categories", categoryService.getCategoryList());
 
         return "post/write";
     }
@@ -99,7 +99,7 @@ public class PostController {
         }
 
         model.addAttribute("post", postOptional.get());
-        model.addAttribute("categories", postService.getCategoryList());
+        model.addAttribute("categories", categoryService.getCategoryList());
         model.addAttribute("selectedCategoryId", postService.getCategoryIdByPostId(postId));
 
         return "post/edit";
