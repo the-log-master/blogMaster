@@ -19,6 +19,7 @@ public class CommentService {
 
     private final MemoryRepository memoryRepository;
 
+    // 특정 게시물에 달린 댓글 목록을 조회하는 메서드
     public List<Comment> getCommentsByPost(int postId) {
         Post post = memoryRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
@@ -32,6 +33,7 @@ public class CommentService {
                 .sorted(Comparator.comparing(Comment::getCreatedAt))
                 .toList();
 
+        //컨트롤러를 통해 post를 리디이렉트 시 comment를 구조에 맞게 삽입하는 기능 수행
         for (Comment root : rootComments) {
 
             result.add(root);
@@ -46,10 +48,12 @@ public class CommentService {
         return result;
     }
 
+    // 게시글에 새로운 일반 댓글을 추가하는 메서드
     public void addComment(int postId, String content) {
         addCommentInternal(postId, content, ROOT_PARENT_ID, 0);
     }
 
+    // 특정 댓글에 대댓글을 추가하는 메서드
     public void addReply(int postId, int parentId, String content) {
         Post post = memoryRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
@@ -64,13 +68,9 @@ public class CommentService {
 
         addCommentInternal(postId, content, parentId, depth);
 
-        log.info(
-                "ADD REPLY parentId={}, content={}",
-                parentId,
-                content
-        );
     }
 
+    // 댓글과 대댓글을 실제로 생성하고 저장하는 내부 공통 메서드
     private void addCommentInternal(
             int postId,
             String content,
@@ -104,6 +104,7 @@ public class CommentService {
         MemoryRepository.comments.add(comment);
     }
 
+    //기존의 댓글을 수정하는 메서드
     public void updateComment(int postId, int commentId, String content) {
         Post post = memoryRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
@@ -118,6 +119,7 @@ public class CommentService {
         comment.setUpdateAt(LocalDateTime.now());
     }
 
+    //댓글을 삭제하는 메서드
     public void removeComment(int postId, int commentId) {
         Post post = memoryRepository.findPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
@@ -134,6 +136,7 @@ public class CommentService {
         );
     }
 
+    //특정 댓글 아래에 연결된 모든 자식 댓글 ID를 수집하는 메서드
     private void collectChildCommentIds(
             Post post,
             int commentId,
@@ -150,6 +153,7 @@ public class CommentService {
                 );
     }
 
+    //부모 댓글 아래에 자식댓글을 붙여 댓글 계층구조를 만드는 메서드
     private void addChildren(
             int parentId,
             Collection<Comment> allComments,
