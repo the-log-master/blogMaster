@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="categoryModal">
+    <dialog id="category_modal" class="modal">
+        <div class="modal-box max-w-md">
+            <h3 class="text-lg font-bold mb-4">카테고리 관리</h3>
+            <!-- action 경로는 기존 PostMapping과 일치해야 합니다 -->
+            <form th:action="@{/category/update-all}" method="post">
+                <!-- 자바스크립트가 데이터를 채울 곳입니다. th:each는 삭제했습니다. -->
+                <div id="category-container" class="space-y-2"></div>
+
+                <button type="button" class="btn btn-outline btn-block mt-4" onclick="addRow()">
+                    <span class="text-xl">+</span> 추가하기
+                </button>
+
+                <div class="modal-action">
+                    <button type="button" class="btn" onclick="category_modal.close()">취소</button>
+                    <button type="submit" class="btn btn-primary px-8">확인</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <script>
+        // 모달열때
+        async function openCategoryModal() {
+            //모달 열때 alert 띄우기
+            var result = confirm("카테고리 관리를 저장하면 현재 페이지 정보가 날라갈 수 있습니다.\n" +
+                "그래도 하시겠습니까?");
+
+            if(result){
+                const container = document.getElementById('category-container');
+                container.innerHTML = '<p class="text-center p-4">로딩 중...</p>';
+
+                // 모달띄우기
+                document.getElementById('category_modal').showModal();
+
+                try {
+                    // API 호출 (주소가 /api/categories 인지 확인!)
+                    const response = await fetch('/api/categories');
+                    if (!response.ok) throw new Error('데이터 응답 에러');
+
+                    const categories = await response.json();
+
+                    console.log("categories:"+categories);
+
+                    container.innerHTML = ''; // 로딩 문구 제거
+
+                    // 받아온 데이터 뿌리기
+                    categories.forEach(cat => {
+                        // 이름이 null이 아닌 것만 (id 0번 등 필터링)
+                        if (cat.categoryName !== null) {
+                            renderRow(cat.id, cat.categoryName);
+                        }
+                    });
+                } catch (e) {
+                    console.error(e);
+                    container.innerHTML = '<p class="text-error text-center p-4">데이터를 불러오지 못했습니다.</p>';
+                }
+            }
+
+        }
+
+        // 공통 행 생성 함수
+        function renderRow(id, name) {
+            const container = document.getElementById('category-container');
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2 category-row';
+            div.innerHTML = `
+                <span class="text-gray-400">└</span>
+                <input type="hidden" name="ids" value="${id}" />
+                <input type="text" name="categoryNames" value="${name}"
+                       class="input input-bordered flex-1" placeholder="카테고리명" required/>
+                <button type="button" class="btn btn-ghost btn-sm text-error" onclick="removeRow(this)">✕</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function addRow() {
+            renderRow(-1, ''); // 새 카테고리는 ID -1
+        }
+
+        function removeRow(btn) {
+            btn.closest('.category-row').remove();
+        }
+
+        //삭제시 넘기기
+        document.querySelector('#category_modal form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // 폼의 기본 제출
+            // 알림창 (진짜로 저장할건지 물어보기)
+            var result2 = confirm("카테고리를 현재 내용으로 저장하시겠습니까?");
+
+            if(result2){
+                const formData = new FormData(e.target);
+
+                try {
+                    const response = await fetch(e.target.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // 성공 시 모달 닫고 페이지 새로고침
+                        const modal = document.getElementById('category_modal');
+                        modal.close();
+                        location.reload(); //새로고침
+                    } else {
+                        alert('저장에 실패했습니다.');
+                    }
+                } catch (error) {
+                    console.error('에러 발생:', error);
+                    alert('서버와 통신 중 오류가 발생했습니다.');
+                }
+            }
+
+        });
+    </script>
+</div>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" layout:decorate="~{layouts/base_layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+</head>
+<body>
+
+<!-- 본문 내용 (index.html 등에서 채워짐) -->
+<!-- .mx-auto.mt-4 대신 공백으로 구분한 클래스명을 사용하세요 -->
+<div class="container mx-auto p-4" layout:fragment="contents">
+
+
+    <h2 class="text-2xl font-bold mb-6 text-primary">게시글 작성</h2>
+
+    <form action="/posts/write" class="space-y-6" method="post">
+
+        <!-- 작성자 & 제목 (반응형 그리드) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 작성자 -->
+            <div class="form-control w-full">
+                <label class="label" for="userName">
+                    <span class="label-text font-semibold">작성자</span>
+                </label>
+                <input class="input input-bordered w-full focus:input-primary" id="userName" name="userName" placeholder="작성자 이름을 입력하세요"
+                       type="text"/>
+            </div>
+
+            <!-- 카테고리 선택 -->
+            <div class="form-control w-full">
+                <label class="label" for="categoryId">
+                    <span class="label-text font-semibold">카테고리</span>
+                </label>
+                <select class="select select-bordered w-full focus:select-primary" id="categoryId" name="categoryId">
+                    <option value="0">카테고리 없음</option>
+                    <option th:each="category : ${categories}"
+                            th:if="${category.id != 0}"
+                            th:text="${category.categoryName}"
+                            th:value="${category.id}">카테고리명
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 제목 -->
+        <div class="form-control w-full">
+            <label class="label" for="postName">
+                <span class="label-text font-semibold">제목</span>
+            </label>
+            <input class="input input-bordered w-full focus:input-primary" id="postName" name="postName" placeholder="제목을 입력하세요"
+                   required type="text"/>
+        </div>
+
+        <!-- 공개 여부 (토글 또는 체크박스) -->
+        <div class="form-control w-fit">
+            <label class="label cursor-pointer gap-4">
+                <span class="label-text font-semibold">공개 설정</span>
+                <input checked class="checkbox checkbox-primary" name="isOpen" type="checkbox"/>
+            </label>
+        </div>
+
+        <!-- 내용 -->
+        <div class="form-control w-full">
+            <label class="label" for="content">
+                <span class="label-text font-semibold">내용</span>
+            </label>
+            <textarea class="textarea textarea-bordered w-full h-[40vh] text-base focus:textarea-primary" id="content" name="content" placeholder="내용을 입력하세요"
+                      required></textarea>
+        </div>
+
+        <!-- 하단 버튼 영역 -->
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4">
+            <button class="btn btn-neutral" type="reset">초기화</button>
+            <button class="btn btn-primary" type="submit">작성하기</button>
+        </div>
+
+    </form>
+
+
+    <!--  <form action="/posts/write" method="post">
+
+          <div>
+              <label for="userName">작성자</label>
+              <input id="userName" name="userName" placeholder="작성자 이름" type="text">
+          </div>
+
+          <br>
+
+          <div>
+              <label for="postName">제목</label>
+              <input id="postName" name="postName" required type="text">
+          </div>
+
+          <br>
+
+          <div>
+              <label for="categoryId">카테고리</label>
+
+              <select id="categoryId" name="categoryId">
+                  <option value="0">카테고리 없음</option>
+
+                  <option th:each="category : ${categories}"
+                          th:if="${category.id != 0}"
+                          th:text="${category.categoryName}"
+                          th:value="${category.id}">
+                      카테고리명
+                  </option>
+              </select>
+          </div>
+
+          <br>
+
+          <div>
+              <label>
+                  <input checked name="isOpen" type="checkbox">
+                  공개
+              </label>
+          </div>
+
+          <br>
+
+          <div>
+              <label for="content">내용</label>
+              <br>
+              <textarea cols="80" id="content" name="content" required rows="10"></textarea>
+          </div>
+
+          <br>
+
+          <button type="submit">작성</button>
+          <button type="reset">초기화</button>
+
+      </form>-->
+
+    <hr>
+
+    <a href="/posts" class="btn btn-info">목록으로 이동</a>
+</div>
+</body>
+</html>
