@@ -1,6 +1,7 @@
 package io.thelogmaster.blogmaster.controller;
 
 import io.thelogmaster.blogmaster.model.Post;
+import io.thelogmaster.blogmaster.service.CommentService;
 import io.thelogmaster.blogmaster.service.PostService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,10 @@ import java.util.Optional;
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
+    private final CommentService commentService;
+    public PostController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     // 게시글 목록 화면
@@ -75,7 +77,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("categoryId", postService.getCategoryIdByPostId(postId));
         model.addAttribute("categoryName", postService.getCategoryNameByPostId(postId));
-        model.addAttribute("comments", post.getCommentMap().values());
+        model.addAttribute("comments", commentService.getCommentsByPost(postId));
 
         return "post/detail";
     }

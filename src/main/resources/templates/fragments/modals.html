@@ -71,7 +71,7 @@
                 <span class="text-gray-400">└</span>
                 <input type="hidden" name="ids" value="${id}" />
                 <input type="text" name="categoryNames" value="${name}"
-                       class="input input-bordered flex-1" placeholder="카테고리명" />
+                       class="input input-bordered flex-1" placeholder="카테고리명" required/>
                 <button type="button" class="btn btn-ghost btn-sm text-error" onclick="removeRow(this)">✕</button>
             `;
             container.appendChild(div);
@@ -88,7 +88,6 @@
         //삭제시 넘기기
         document.querySelector('#category_modal form').addEventListener('submit', async (e) => {
             e.preventDefault(); // 폼의 기본 제출
-
             // 알림창 (진짜로 저장할건지 물어보기)
             var result2 = confirm("카테고리를 현재 내용으로 저장하시겠습니까?");
 
