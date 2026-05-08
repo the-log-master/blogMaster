@@ -16,7 +16,7 @@
 
 ## 2. 기술 스택 (Tech Stack)
 
-* **Framework:** Spring Boot 3.x, Java 17
+* **Framework:** Spring Boot 4.x, Java 25
 * **View:** Thymeleaf, Layout Dialect
 * **Storage:** Java Collections (ConcurrentHashMap, ArrayList)
 * **Concurrency Control:** AtomicLong (ID 생성 보안 및 동시성 보장)
